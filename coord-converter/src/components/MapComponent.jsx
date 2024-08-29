@@ -14,7 +14,7 @@ const center = {
 function MapComponent({ latitude, longitude }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY // Replace with your actual API key
+    googleMapsApiKey: "AIzaSyAfr4pcLkb0PR2_ciX_QGurNShSbEvo2wE"
   });
 
   const [map, setMap] = useState(null);
