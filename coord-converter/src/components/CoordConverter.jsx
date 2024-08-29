@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MapComponent from './MapComponent';
 
 const CoordConverter = () => {
   const [latitude, setLatitude] = useState('');
@@ -63,7 +64,7 @@ const CoordConverter = () => {
           <h2 className="text-lg font-semibold">Converted Coordinates (DMS):</h2>
           <p>{convertedCoords}</p>
         </div>
-      )}
+      )} <MapComponent latitude={latitude} longitude={longitude} />
     </div>
   );
 };
