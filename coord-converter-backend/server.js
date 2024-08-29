@@ -2,12 +2,10 @@ require("dotenv").config();
 const fastify = require("fastify")({ logger: true });
 const mysql = require("mysql2/promise");
 
-// Enable CORS
-fastify.register(require("fastify-cors"), {
+fastify.register(require("@fastify/cors"), {
   origin: true, // adjust this in production
 });
 
-// Database connection
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -15,15 +13,14 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-// Create a route to save coordinates
 fastify.post("/save-coords", async (request, reply) => {
-  const { lat, lng, notes } = request.body;
+  const { lat, lng } = request.body;
 
   try {
     const connection = await mysql.createConnection(dbConfig);
     const [result] = await connection.execute(
-      "INSERT INTO coords_data (lat, lng, notes, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())",
-      [lat, lng, notes]
+      "INSERT INTO coords_data (lat, lng, created_at, updated_at) VALUES (?, ?, NOW(), NOW())",
+      [lat, lng]
     );
     await connection.end();
 
@@ -36,10 +33,9 @@ fastify.post("/save-coords", async (request, reply) => {
   }
 });
 
-// Run the server
 const start = async () => {
   try {
-    await fastify.listen(process.env.PORT);
+    await fastify.listen({ port: process.env.PORT });
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);

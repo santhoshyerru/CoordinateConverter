@@ -21,7 +21,27 @@ const CoordConverter = () => {
     const lonDMS = convertToDMS(parseFloat(longitude));
     setConvertedCoords(`${latDMS} ${latitude >= 0 ? 'N' : 'S'}, ${lonDMS} ${longitude >= 0 ? 'E' : 'W'}`);
   };
+  const handleSave = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/save-coords', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ lat: latitude, lng: longitude }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save coordinates');
+      }
 
+      const result = await response.json();
+      alert(`Coordinates saved successfully with ID: ${result.id}`);
+    } catch (error) {
+      console.error('Error saving coordinates:', error);
+      alert('Failed to save coordinates. Please try again.');
+    }
+  };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
       <h1 className="text-2xl font-bold mb-4">Coordinate Converter</h1>
@@ -58,6 +78,12 @@ const CoordConverter = () => {
         onClick={handleConvert}
       >
         Convert Coords
+      </button>
+      <button
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 m-2 rounded focus:outline-none focus:shadow-outline"
+        onClick={handleSave}
+      >
+        Save Coords
       </button>
       {convertedCoords && (
         <div className="mt-4 p-3 bg-gray-100 rounded">
